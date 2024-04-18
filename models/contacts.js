@@ -8,7 +8,7 @@ import { nanoid } from 'nanoid';
 const contactsPath = path.join(__dirname,"contacts.json");
 
 export const listContacts = async () => {
-  try{
+  try {
     const data = await readFile(contactsPath);
      return JSON.parse(data)
   } catch (err) {console.log("Read contacts error:", err.message);
@@ -17,7 +17,7 @@ export const listContacts = async () => {
 
 //---------------------------------------------------------
 export const getContactById = async (contactId) => {
-   try{
+   try {
     const contacts = await listContacts();
     const contact = contacts.find(contact => contact.id === contactId)
   if(!contact){

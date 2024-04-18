@@ -14,7 +14,7 @@ router.get('/:contactId', async (req, res, next) => {
   const id = req.params.contactId;
     const contact = await getContactById(id);
     if(!contact){
-      res.status(404).json({"message": "Not found"})
+      return res.status(404).json({"message": "Not found"})
     }
   res.status(200).json(contact)
 })
@@ -31,10 +31,10 @@ router.delete('/:contactId', async (req, res, next) => {
   const id = req.params.contactId;
     const contactToDelete = await getContactById(id);
     if(!contactToDelete){
-      res.status(404).json({"message": "Not found"})
+      return res.status(404).json({"message": "Not found"})
     }else {
       await removeContact(id);
-      res.status(200).json({"message": "contact deleted"})
+      return res.status(200).json({"message": "contact deleted"})
 }})
 //-------------------------------------------
 router.put('/:contactId', async (req, res, next) => {
