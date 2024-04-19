@@ -1,11 +1,5 @@
-import { readFile, writeFile } from 'fs/promises';
-import path from "path";
 import Joi from 'joi';
-const __dirname = import.meta.dirname;
-import { nanoid } from 'nanoid';
 import Contact from '../models/contactsModels.js';
-
-const contactsPath = path.join(__dirname,"contacts.json");
 
 export const listContacts = async () => {
 	return Contact.find();
