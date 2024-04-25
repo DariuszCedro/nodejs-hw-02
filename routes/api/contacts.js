@@ -1,14 +1,17 @@
 import express from 'express';
 import { listContacts, getContactById, removeContact, addContact, updateContact, updateStatusContact } from '../../models/contacts.js';
+import authMiddleware from "../middleware/authMiddleware.js";
 
 
 const router = express.Router()
+
+router.use(authMiddleware);
 
 //-------------------------------------------
 router.get("/", async (req, res, next) => {
 	try {
 		const contacts = await listContacts();
-		res.json(contacts);
+		return res.json(contacts);
 	} catch (error) {
 		next(error);
 	}
@@ -16,23 +19,30 @@ router.get("/", async (req, res, next) => {
 
 //-------------------------------------------
 router.get('/:contactId', async (req, res, next) => {
-  const id = req.params.contactId;
-    const contact = await getContactById(id);
-    if(!contact){
-      return res.status(404).json({"message": "Not found"})
+  	try {
+		const id = req.params.contactId;
+    	const contact = await getContactById(id);
+    	if(!contact){
+      	return res.status(404).json({"message": "Not found"})
     }
-  res.status(200).json(contact)
-})
+  	res.status(200).json(contact)
+	} catch (error) {
+	next(error);
+}})
 
 //-------------------------------------------
-router.post('/', async (req, res, next) => {
+router.post('/',  async (req, res, next) => {
+const id = req.user._id;
+
   try {
-    const newContact = await addContact(req.body);
+	 req.body.owner = id;
+	 const newContact = await addContact(req.body);
+	 console.log(newContact)
     res.status(201).json(newContact)
   }catch (err){res.status(400).json({"message": "missing required name - field"})}})
 
 //-------------------------------------------
-router.delete('/:contactId', async (req, res, next) => {
+router.delete('/:contactId',  async (req, res, next) => {
   try {
   const id = req.params.contactId;
     const contactToDelete = await getContactById(id);
