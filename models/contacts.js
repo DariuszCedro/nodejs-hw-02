@@ -16,24 +16,18 @@ export const removeContact = async (contactId) => {
 };
 //---------------------------------------------------------
 export const addContact = async (body) => {
-  const { name, email, phone } = body;
+  const { name, email, phone} = body;
   const schema = Joi.object({
     name: Joi.string().required(),
     email: Joi.string().email().required(),
-    phone: Joi.string().required(),
+    phone: Joi.string()
   });
   const validationResult = schema.validate({ name, email, phone });
 
   if (validationResult.error) {
     throw new Error(validationResult.error.details[0].message);
   }
-
-  const contacts = await listContacts();
-  const newContact = {
-    name,
-    email,
-    phone,
-  };
+ 
   return Contact.create(body);
  
 }
