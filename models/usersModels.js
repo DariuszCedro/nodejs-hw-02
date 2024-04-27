@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
+import gravatar from 'gravatar'; 
 
 const userSchema = new mongoose.Schema({
     password: {
@@ -21,8 +21,22 @@ const userSchema = new mongoose.Schema({
       type: String,
       default: null,
     },
+    avatarURL: {
+      type: String,
+      default: null,
+    },
   });
 
+  userSchema.pre('save', async function (next) {
+    const user = this;
+   
+    if (!user.avatarURL) {
+      const avatarURL = gravatar.url(user.email, { s: '200', r: 'pg', d: 'mm' });
+      user.avatarURL = avatarURL;
+    }
+  
+    next();
+  });
   
   
   userSchema.methods.generateAuthToken = async function () {
