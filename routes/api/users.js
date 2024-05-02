@@ -1,5 +1,5 @@
 import express from 'express';
-import {signup, login, logout, currentUser, updateAvatar} from "../../models/users.js";
+import {signup, login, logout, currentUser, updateAvatar, verifyUser, resendVerificationEmail} from "../../models/users.js";
 import authMiddleware from '../../routes/middleware/authMiddleware.js'
 import multer from 'multer';
 import path from "path";
@@ -32,5 +32,7 @@ router.get('/logout', authMiddleware, logout);
 router.get('/current', authMiddleware, currentUser); 
 router.patch('/avatars',authMiddleware, upload.single('avatar'),
 updateAvatar);
+router.post('/verify', resendVerificationEmail);
+router.get('/verify/:verificationToken', verifyUser);
 
 export default router;

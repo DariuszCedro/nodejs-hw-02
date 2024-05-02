@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import jwt from 'jsonwebtoken';
 import gravatar from 'gravatar'; 
+import { nanoid } from "nanoid";
 
 const userSchema = new mongoose.Schema({
     password: {
@@ -25,6 +26,14 @@ const userSchema = new mongoose.Schema({
       type: String,
       default: null,
     },
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+      required: [true, 'Verify token is required'],
+    },
   });
 
   userSchema.pre('save', async function (next) {
@@ -33,6 +42,12 @@ const userSchema = new mongoose.Schema({
     if (!user.avatarURL) {
       const avatarURL = gravatar.url(user.email, { s: '200', r: 'pg', d: 'mm' });
       user.avatarURL = avatarURL;
+    }
+
+    if (!user.verificationToken) {
+
+      user.verificationToken = nanoid();
+     
     }
   
     next();
